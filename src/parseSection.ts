@@ -3,6 +3,7 @@ import type { Section } from "./section.js";
 
 export function parseSections(html: string): Section[] {
     const $ = cheerio.load(html);
+    $("annotation").remove()
     const sections: Section[] = [];
 
     const abstract = $("div.ltx_abstract");
