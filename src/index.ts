@@ -12,7 +12,7 @@ const html = await fetchPaper("1706.03762")
 const sections = parseSections(html)
 const messages: any[] = [
   { role: "system", content: SystemPrompt },
-  { role: "user", content: "What does the Results section say about BLEU scores?" }
+  { role: "user", content: "Extract the key claims made in this paper, with supporting quotes."}
 ]
 
 function isGrounded(source: string, quote: string) {
@@ -63,6 +63,11 @@ if (!finalContent) throw new Error("no final content")
 
 const start = finalContent.indexOf("[")
 const end = finalContent.lastIndexOf("]")
+
+if (start === -1 || end === -1) {
+    throw new Error(`no JSON array found in model response. Raw content was: ${finalContent}`)
+}
+
 const jsonText = finalContent.slice(start, end + 1)
 const result = ClaimList.safeParse(JSON.parse(jsonText))
 
