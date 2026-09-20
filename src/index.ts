@@ -4,6 +4,8 @@ import { client, model } from "./client.js";
 
 import { stringText } from "./source.js";
 import { Claim, ClaimList } from "./schema.js";
+import { fetchPaper } from "./fetchPaper.js";
+import { parseSections } from "./parseSection.js";
 
 
 const response = await client.chat.completions.create({
@@ -36,3 +38,5 @@ if (!result.success) {
     }
 }
 
+const html = await fetchPaper("1706.03762")
+const sections = parseSections(html)
