@@ -77,6 +77,9 @@ if (!result.success) {
     for (const claim of result.data) {
         const section = sections.find((s) => s.id === claim.sectionId)
         const grounded = section ? isGrounded(section.text, claim.quote) : false
-        console.log(claim.claim, "-> verified:", grounded, section ? "" : "(section not found)")
+        console.log("Claim:", claim.claim)
+        console.log("Quote:", claim.quote)
+        console.log("Section:", claim.sectionId, "Verified:", grounded)
+        console.log("---")
     }
 }
