@@ -1,5 +1,5 @@
 
-import { SystemPrompt } from "./prompt.js";
+import {  SystemPrompt, UserPrompt } from "./prompt.js";
 import { client, model } from "./client.js";
 
 import { stringText } from "./source.js";
@@ -7,7 +7,10 @@ import { Claim, ClaimList } from "./schema.js";
 
 
 const response = await client.chat.completions.create({
-    model:model,messages:[{role:"user", content:SystemPrompt}]
+    model:model,messages:
+    [{role:"user", content:UserPrompt},
+     {role:"system", content:SystemPrompt}
+    ]
 })
 
 console.log(response.choices[0]?.message.content);
