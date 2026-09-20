@@ -1,10 +1,10 @@
-;
+
 import { SystemPrompt } from "./prompt.js";
 import { client, model } from "./client.js";
-import { log } from "console";
-import { callbackify } from "util";
+
 import { stringText } from "./source.js";
-import { sourceMapsEnabled } from "process";
+import { Claim, ClaimList } from "./schema.js";
+
 
 const response = await client.chat.completions.create({
     model:model,messages:[{role:"user", content:SystemPrompt}]
@@ -22,12 +22,14 @@ const raw = response.choices[0]?.message.content
 if(!raw)
     throw new Error("value does not exist")
 
+const trimmed = raw.replace(/^```json\n?/, "").replace(/```$/, "").trim()
+const result = ClaimList.safeParse(JSON.parse(trimmed))
 
-const claims = JSON.parse(raw)
-
-
-for(const claim of claims){
-    if(claim){
-        console.log(isGrounded(stringText,claim.quote))
+if (!result.success) {
+    console.log("Validation failed:", result.error)
+} else {
+    for (const claim of result.data) {
+        console.log(isGrounded(stringText, claim.quote))
     }
 }
+
